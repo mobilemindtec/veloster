@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>br.com.mobilemind.api</groupId>
+        <artifactId>veloster</artifactId>
+        <version>1.14</version>    
+    </parent>  
+
+    <artifactId>veloster-droid</artifactId>
+    <version>1.14</version>
+    <packaging>jar</packaging>
+    <name>Mobile Mind - Veloster Droid</name>
+
+    <dependencies>
+      
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>2.2.1</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>json</artifactId>
+                    <groupId>org.json</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>  
+
+        <dependency>
+            <groupId>br.com.mobilemind.api</groupId>
+            <artifactId>veloster-api</artifactId>
+            <version>1.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>br.com.mobilemind.api</groupId>
+            <artifactId>mobilemind-droid-util</artifactId>
+            <version>1.1</version>
+        </dependency>
+    
+    </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>mobile-mind</id>
+            <name>Mobile Mind</name>
+            <url>http://54.235.75.25/nexus/content/repositories/mobile-mind-droid</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>mobile-mind-droid-nexus</id>
+            <name>vineetmanohar</name>
+            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>mobile-mind-nexus</id>
+            <name>vineetmanohar</name>
+            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>        
+    </repositories>
+
+    <!-- download plugins from this repo -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mobile-mind-droid-nexus</id>
+            <name>vineetmanohar</name>
+            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>mobile-mind-nexus</id>
+            <name>vineetmanohar</name>
+            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>    
+        
+    <profiles>
+        <profile>
+            <id>portal-war</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>enableCiProfile</name>
+                    <value>true</value>
+                </property>
+            </activation> 
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.7</version>
+                        <executions>
+                            <execution>
+                                <id>exec-one</id>                                
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>                        
+                            </execution>                                                
+                        </executions>
+                        <configuration>
+                            <updateReleaseInfo>true</updateReleaseInfo>
+                        </configuration>                        
+                    </plugin>                 
+                </plugins>                        
+            </build>
+        </profile>
+    </profiles>
+	
+    <build>      
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

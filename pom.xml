@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>br.com.mobilemind.api</groupId>
+    <artifactId>veloster</artifactId>
+    <version>1.14</version>
+    <packaging>pom</packaging>
+    
+    <name>Mobile Mind - Veloster</name>
+
+    <distributionManagement>
+        <repository>
+            <id>mobile-mind</id>
+            <name>Mobile Mind Nexus</name>
+            <url>http://54.235.75.25/nexus/content/repositories/mobile-mind</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>mobile-mind-nexus</id>
+            <name>vineetmanohar</name>
+            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mobile-mind-nexus</id>
+            <name>vineetmanohar</name>
+            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    
+    <profiles>
+        <profile>
+            <id>portal-war</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>enableCiProfile</name>
+                    <value>true</value>
+                </property>
+            </activation> 
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.7</version>
+                        <executions>
+                            <execution>
+                                <id>exec-one</id>
+                                <phase>install</phase>
+                                <goals>                                    
+                                    <goal>deploy</goal>                                    
+                                </goals>                        
+                            </execution>                    
+                        </executions>
+                    </plugin>  
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <configuration>
+                            <licenseName>gpl_v2</licenseName>
+                            <organizationName>Mobile Mind Empresa de Tecnologia</organizationName>
+                            <inceptionYear>2012</inceptionYear>
+                            <verbose>true</verbose>
+                            <projectName>Veloster Framework</projectName>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>first</id>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                            </execution>
+                        </executions>
+                    </plugin>                                   
+                </plugins>                        
+            </build>
+
+        </profile>
+    </profiles>	    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+  
+    <modules>
+        <module>veloster-api</module>
+        <module>veloster-droid</module>
+    </modules>
+  
+</project>
