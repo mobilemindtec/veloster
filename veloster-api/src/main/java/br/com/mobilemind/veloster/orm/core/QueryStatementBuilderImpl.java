@@ -112,6 +112,9 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
                 if (f.isJoin()) {
                     type = field.getType();
                 }
+                
+                
+                MMLogger.log(Level.INFO, getClass(), "#### " + value + " type " + type);
             }
 
             if (ClassUtil.isAssignableFrom(type, Entity.class)) {
