@@ -1,4 +1,4 @@
-Veloster Framework
+Veloster Framework - ORM Android
 ==================
 
 O Framework Veloster surgiu com a necessidade de agilizar o desenvolvimento da camada de persistência de dados em ambiente Android. Como tantos outros projetos teve seu início sem grandes pretenções, e depois de mais de um dois de desenvolvimento e uso, se mostrou muito eficiente, produtivo e estável em suas tarefas. Dentre as principais funcionalidades, podemos destacar: 
