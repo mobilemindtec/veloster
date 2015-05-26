@@ -47,15 +47,15 @@
         <repository>
             <id>mobile-mind</id>
             <name>Mobile Mind</name>
-            <url>http://54.235.75.25/nexus/content/repositories/mobile-mind-droid</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
-            <id>mobile-mind-droid-nexus</id>
+            <id>mobile-mind-droid</id>
             <name>vineetmanohar</name>
-            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -65,9 +65,9 @@
             </snapshots>
         </repository>
         <repository>
-            <id>mobile-mind-nexus</id>
+            <id>mobile-mind</id>
             <name>vineetmanohar</name>
-            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -81,9 +81,9 @@
     <!-- download plugins from this repo -->
     <pluginRepositories>
         <pluginRepository>
-            <id>mobile-mind-droid-nexus</id>
+            <id>mobile-mind-droid</id>
             <name>vineetmanohar</name>
-            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -92,9 +92,9 @@
             </snapshots>
         </pluginRepository>
         <pluginRepository>
-            <id>mobile-mind-nexus</id>
+            <id>mobile-mind</id>
             <name>vineetmanohar</name>
-            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

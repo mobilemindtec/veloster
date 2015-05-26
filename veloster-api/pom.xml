@@ -19,7 +19,7 @@
         <repository>
             <id>mobile-mind</id>
             <name>Mobile Mind</name>
-            <url>http://54.235.75.25/nexus/content/repositories/mobile-mind</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
         </repository>
     </distributionManagement>
 

@@ -13,7 +13,7 @@
         <repository>
             <id>mobile-mind</id>
             <name>Mobile Mind Nexus</name>
-            <url>http://54.235.75.25/nexus/content/repositories/mobile-mind</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
         </repository>
     </distributionManagement>
 
@@ -21,7 +21,7 @@
         <repository>
             <id>mobile-mind-nexus</id>
             <name>vineetmanohar</name>
-            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -36,7 +36,7 @@
         <pluginRepository>
             <id>mobile-mind-nexus</id>
             <name>vineetmanohar</name>
-            <url>http://www.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
