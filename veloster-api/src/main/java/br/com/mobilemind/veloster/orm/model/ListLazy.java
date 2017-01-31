@@ -86,7 +86,7 @@ public class ListLazy<T extends Entity> extends LinkedList<T> {
     @Override
     public T set(int index, T element) {
         return this.list.set(index, element);
-    }       
+    }
 
     @Override
     public boolean add(T e) {
@@ -118,6 +118,13 @@ public class ListLazy<T extends Entity> extends LinkedList<T> {
 
     @Override
     public void clear() {
+
+        for (T it : this) {
+            if (!this.deletedList.contains(it)) {
+                this.deletedList.add(it);
+            }
+        }
+
         this.list.clear();
         this.size = 0;
         this.offset = 0;

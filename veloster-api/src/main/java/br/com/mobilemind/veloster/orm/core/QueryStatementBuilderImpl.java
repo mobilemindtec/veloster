@@ -110,19 +110,14 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
             } else {
                 value = f.getValue();
                 if (f.isJoin()) {
-                    type = field.getType();
+                    type = f.getJoinField().getFieldReflect().getType();
                 }
-                
-                
-                MMLogger.log(Level.INFO, getClass(), "#### " + value + " type " + type);
             }
 
             if (ClassUtil.isAssignableFrom(type, Entity.class)) {
                 if (value instanceof Entity) {
                     value = ((Entity) value).getId();
                     type = Long.class;
-                } else if (!f.isNullable()) {
-                    throw new VelosterException("field " + f.getName() + " to entity " + clazz.getSimpleName() + " can't be null");
                 } else {
                     type = Long.class;
                     value = null;
@@ -133,19 +128,21 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
                 }
             } else if (type.isEnum()) {
                 if (f.parseEnumInt()) {
+                    if (!f.isNullable() && value == null) {
+                        throw new VelosterException("value can't be null in enum " + type.getSimpleName() + " in entity " + f.getTable().getTableClass().getName());
+                    }
                     if (value != null) {
-                        //throw new VelosterException("value can't be null in enum " + type.getSimpleName() + " in entity " + f.getTable().getTableClass().getName());
                         value = ((Enum) value).ordinal();
                     }
-
                     type = Integer.class;
                 } else {
                     if (f.parseEnumString()) {
+                        if (!f.isNullable() && value == null) {
+                            throw new VelosterException("value can't be null in enum " + type.getSimpleName() + " in entity " + f.getTable().getTableClass().getName());
+                        }
                         if (value != null) {
-                            //throw new VelosterException("value can't be null in enum " + type.getSimpleName() + " in entity " + f.getTable().getTableClass().getName());
                             value = ((Enum) value).name();
                         }
-
                         type = String.class;
                     }
                 }
@@ -194,12 +191,11 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
     private T getUniqueResult0(T entity, ResultSet rs, Map<String, Entity> cache) throws SQLException, Exception {
         List<ColumnWrapper> fields = this.annotationsManager.getFields();
         List<ColumnWrapper> lazyLoadWrapper = new ArrayList<ColumnWrapper>();
-        Class type = null;
-        Object value = null;
-        Field field = null;
 
         for (ColumnWrapper f : fields) {
-
+            Field field = null;
+            Object value = null;
+            Class type = null;
             type = f.getType();
             field = f.getFieldReflect();
             if (!field.isAccessible()) {
@@ -210,34 +206,39 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
             if (type.isEnum()) {
                 if (f.parseEnumInt()) {
                     Integer val = rs.getInteger(f.getName());
-                    if (val != null) {
-                        for (Object p : type.getEnumConstants()) {
-                            if (val == ((Enum) p).ordinal()) {
-                                value = p;
-                            }
+                    if (val == null) {
+                        val = 0;
+                    }
+                    for (Object p : type.getEnumConstants()) {
+                        if (val == ((Enum) p).ordinal()) {
+                            value = p;
                         }
+                    }
 
-                        if (value == null) {
-                            throw new Exception("enum type " + type.getName() + " value " + val + " not found");
-                        }
+                    if (value == null && !f.isNullable()) {
+                        throw new Exception("enum type " + type.getName() + " value " + val + " not found");
+                    }
 
+                    if (value != null) {
                         field.set(entity, value);
                     }
 
                 } else {
                     String val = rs.getString(f.getName());
 
-                    if (val != null) {
-                        for (Object p : type.getEnumConstants()) {
-                            if (((Enum) p).name().equals(val)) {
-                                value = p;
-                            }
+                    for (Object p : type.getEnumConstants()) {
+                        if (((Enum) p).name().equals(val)) {
+                            value = p;
                         }
+                    }
 
-                        if (value == null) {
-                            throw new Exception("enum type " + type.getName() + " name " + val + " not found");
-                        }
+                    MMLogger.log(Level.INFO, this.getClass(), "field name=" + field.getName() + ", enum type=" + type.getName() + ", enum value=" + val);
 
+                    if (value == null && !f.isNullable()) {
+                        throw new Exception("enum type " + type.getName() + " name " + val + " not found");
+                    }
+
+                    if (value != null) {
                         field.set(entity, value);
                     }
                 }
@@ -301,7 +302,7 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
                 throw new VelosterException("type " + type.getSimpleName() + " not found");
             }
         }
-        ColumnWrapper primaryKey = null;
+        ColumnWrapper primaryKey = null; 
 
         for (ColumnWrapper it : fields) {
             if (it.isPrimaryKey()) {

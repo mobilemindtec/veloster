@@ -176,8 +176,8 @@ public class VelosterImpl<T extends Entity> implements Veloster<T> {
 
     @Override
     public void delete(T entity) {
-        synchronized (Statement.SYNC) {
-            this.queryExecutor.delete(entity);
+        synchronized (Statement.SYNC) {            
+            this.queryExecutor.delete(entity);            
         }
     }
 

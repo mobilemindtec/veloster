@@ -253,13 +253,25 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
             String query = this.queryBuilder.getDeleteQuery(criteria);
             conn = openConnection();
 
+            //MMLogger.log(Level.INFO, getClass(), "## delete query: " + query);
+
             if (criteria.getExpressions().size() == 1) {
                 if (criteria.getExpressions().get(0).getField().isPrimaryKey()) {
-                    Long id = (Long) criteria.getExpressions().get(0).getValues().toArray()[0];
-                    T remove = clazz.newInstance();
-                    remove.setId(id);
-                    processListCascade(remove, true, OperationType.DELETE);
+                    
+                    T remove = (T) criteria.getTag();
+                    if(remove == null){
+                        Long id = (Long) criteria.getExpressions().get(0).getValues().toArray()[0];
+                        remove = clazz.newInstance();
+                        remove.setId(id);
+                    }
+                    
+                    processListCascade(remove, true, OperationType.DELETE, true);
+                    //MMLogger.log(Level.INFO, getClass(), "## process delete cascade");
+                } else {
+                    //MMLogger.log(Level.INFO, getClass(), "## not process delete cascade step 2");
                 }
+            } else {
+                //MMLogger.log(Level.INFO, getClass(), "## process delete cascade step 1");
             }
 
             stmt = conn.prepare(query, false);
@@ -391,7 +403,7 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
 
             stmt.executeUpdate();
 
-            processListCascade(entity, useValidation, OperationType.UPDATE);
+            processListCascade(entity, useValidation, OperationType.UPDATE, false);
 
             firePosEnents(entity, UPDATE_LISTENER);
 
@@ -690,6 +702,7 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
 
         Criteria<T> criteria = this.queryBuilder.createCriteria();
         criteria.add("id", new Eq(id));
+        criteria.setTag(entity);
         this.deleteByCriteria(criteria);
     }
 
@@ -703,6 +716,7 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
 
         Criteria<T> criteria = this.queryBuilder.createCriteria();
         criteria.add("id", new Eq(id));
+        criteria.setTag(entity);
         this.updateByCriteria(entity, true, criteria);
     }
 
@@ -716,6 +730,7 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
 
         Criteria<T> criteria = this.queryBuilder.createCriteria();
         criteria.add("id", new Eq(id));
+        criteria.setTag(entity);
         this.updateByCriteria(entity, false, criteria);
     }
 
@@ -764,7 +779,7 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
             }
 
             try {
-                processListCascade(entity, useValidation, OperationType.INSERT);
+                processListCascade(entity, useValidation, OperationType.INSERT, false);
             } catch (Exception e) {
                 entity.setId(old);
                 throw e;
@@ -997,7 +1012,7 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
         }
     }
 
-    private void processListCascade(T entity, boolean useValidation, OperationType type) {
+    private void processListCascade(T entity, boolean useValidation, OperationType type, boolean forceDeleteAll) {
         List<ColumnWrapper> items = this.queryBuilder.getHasManyFields();
         for (ColumnWrapper wrapper : items) {
             MMLogger.log(Level.INFO, getClass(), "process entity cascade to field " + wrapper.getFieldName() + " entity  " + wrapper.getTable().getTableClass().getSimpleName());
@@ -1076,7 +1091,16 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
                         if (wrapper.getHasMany().cascadeAll()
                                 || wrapper.getHasMany().cascadeRemoveOnDelete()) {
                             List list = (List) wrapper.getFieldReflect().get(entity);
+
                             if (list != null && list instanceof ListLazy) {
+                                //MMLogger.log(Level.INFO, getClass(), "## process delete cascade list.zize() = " + list.size());
+
+                                if (forceDeleteAll) {
+                                    list.clear();
+                                }
+                                
+                                //MMLogger.log(Level.INFO, getClass(), "## process delete cascade ((ListLazy) list).getDeletedList().zize() = " + ((ListLazy) list).getDeletedList().size());
+                                
                                 for (Object it : ((ListLazy) list).getDeletedList()) {
                                     field.set(it, entity);
                                     if (((Entity) it).isPersisted()) {
@@ -1084,7 +1108,12 @@ public class QueryExecutorImpl<T extends Entity> implements QueryExecutor<T> {
                                     }
                                 }
                                 ((ListLazy) list).getDeletedList().clear();
+                            }else{
+                                MMLogger.log(Level.INFO, getClass(), "## lis is null  " + (list == null));
+                                MMLogger.log(Level.INFO, getClass(), "## lis is lazy  " + (list instanceof ListLazy));
                             }
+                        }else{
+                            MMLogger.log(Level.INFO, getClass(), "## lis not has delete cascade ");
                         }
                         break;
                 }

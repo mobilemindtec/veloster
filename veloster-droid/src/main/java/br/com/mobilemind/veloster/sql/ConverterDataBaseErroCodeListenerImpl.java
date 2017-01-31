@@ -22,6 +22,7 @@ package br.com.mobilemind.veloster.sql;
  * #L%
  */
 
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteException;
 import br.com.mobilemind.veloster.exceptions.DataBaseException;
 import br.com.mobilemind.veloster.orm.ConverterDataBaseErroCodeListener;

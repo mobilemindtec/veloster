@@ -213,7 +213,8 @@ public class VelosterConfig {
     private static void loadDefaultValues() {
 
         if (CONFIGURATION.driver == null) {
-            CONFIGURATION.driver = new SQLiteDriver();            
+            CONFIGURATION.driver = new SQLiteDriver();
+            CONFIGURATION.driver.setPragmaExecute(true);
         }
 
         if (CONFIGURATION.connectionFactory != null) {

@@ -41,6 +41,7 @@ import java.util.TreeSet;
  */
 public class Criteria<T extends Entity> {
 
+    private Entity tag;
     private final Class<T> clazz;
     private List<Expression> expressions;
     private int limit;
@@ -238,6 +239,14 @@ public class Criteria<T extends Entity> {
         }
 
         return this.executor.loadByCriteria(this);
+    }
+
+    public Entity getTag() {
+        return tag;
+    }
+
+    public void setTag(Entity tag) {
+        this.tag = tag;
     }
 
     /**
