@@ -208,7 +208,18 @@ public class QueryFormatterImpl implements QueryFormatter {
 
         if (ordeBy.size() > 0) {
             OrderBy order = ordeBy.get(0);
-            query.append(" Order By ").append(order.getField().getName());
+            query.append(" Order By ");
+            
+            if(order.getField().isJoin()){
+
+                String joinTable = new TableImpl(order.getField().getType()).name() + ".";
+                String fieldName = order.getField().getJoinField().getName();
+                query.append(joinTable).append(fieldName);
+
+            } else {
+                query.append(order.getField().getName());
+            }
+
             if (order.isDesc()) {
                 query.append(" desc");
             }

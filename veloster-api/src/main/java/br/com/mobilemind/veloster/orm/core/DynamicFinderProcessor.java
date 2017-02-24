@@ -94,6 +94,7 @@ public class DynamicFinderProcessor<T extends Entity> implements InvocationHandl
         //65 - 90
         char c = 0;
         String word = "";
+        String lastWord = "";
         String key = "";
         Finder finder = null;
         boolean isReserved = false;
@@ -105,6 +106,7 @@ public class DynamicFinderProcessor<T extends Entity> implements InvocationHandl
 
             if (!isReserved(key) || isNotIsNull(key, i, methodName)) {
                 key += c + "";
+                lastWord = "";
             } else {
 
                 if (isIgnoreCase(key)) {
@@ -117,73 +119,104 @@ public class DynamicFinderProcessor<T extends Entity> implements InvocationHandl
 
                     finder.isIgnoreCase = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
 
                 if (isStarstWith(key)) {
                     finder.isStartsWith = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
 
                 if (isEndsWith(key)) {
                     finder.isEndsWith = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
 
                 if (isAnyWhere(key)) {
                     finder.isAnyWhere = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
                 if (isIsNull(key)) {
                     finder.isNull = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
 
                 if (isIsNotNull(key)) {
                     finder.isNotNull = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
 
                 if (isNot(key)) {
                     finder.isNot = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
 
                 if (isOrderByDesc(key, i, methodName)) {
                     finder.isOrderByDesc = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
 
                 if (isBetween(key)) {
                     finder.isBetween = true;
                     key = c + "";
+                    lastWord = "";
                     continue;
                 }
 
                 if ("".equals(word)) {
                     c = (char) (c + 32);
                 }
-                word += c;
-                Field f = ClassUtil.getField(clazz, word);
-                if (f != null) {
-                    if (f.getAnnotation(Column.class) == null) {
-                        continue;
-                    }
 
-                    finder = new Finder();
-                    finder.field = f;
-                    finder.fieldName = word;
-                    finder.key = key;
-                    finders.add(finder);
-                    key = word = "";
+                // monta nome do atributo
+                word += c;                
+
+                if(lastWord != ""){
+                    Field f1 = ClassUtil.getField(clazz, lastWord + word);
+
+                    if(f1 != null){
+                        if (f1.getAnnotation(Column.class) == null) {
+                            continue;
+                        }     
+
+                        finder = finders.get(finders.size()-1);
+                        finder.field = f1;
+                        finder.fieldName = lastWord + word;                        
+                        lastWord = lastWord + word;
+                        key = word = "";
+                    }
+                }else {
+
+                    Field f = ClassUtil.getField(clazz, word);
+                    if (f != null) {
+                        if (f.getAnnotation(Column.class) == null) {
+                            continue;
+                        }
+
+                        finder = new Finder();
+                        finder.field = f;
+                        finder.fieldName = word;
+                        finder.key = key;
+                        finders.add(finder);
+                        lastWord = word;
+                        key = word = "";
+                    }
                 }
+
 
             }
         }
