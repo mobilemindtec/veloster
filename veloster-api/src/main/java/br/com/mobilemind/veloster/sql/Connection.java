@@ -24,6 +24,7 @@ package br.com.mobilemind.veloster.sql;
 
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -50,4 +51,6 @@ public interface Connection {
     void addAfterConnection(String pragmaOrQuery);
        
     Statement prepare(String query, boolean isInsert) throws SQLException;
+
+    void setDataFormat(SimpleDateFormat format);
 }

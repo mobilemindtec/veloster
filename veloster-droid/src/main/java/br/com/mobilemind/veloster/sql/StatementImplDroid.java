@@ -52,9 +52,14 @@ public class StatementImplDroid implements Statement {
     }
 
     public StatementImplDroid(DataHelper helper, String query) {
+        this(helper, query, null);
+    }
+
+    public StatementImplDroid(DataHelper helper, String query, SimpleDateFormat format) {
         this.query = query;
         this.helper = helper;
         this.values = new ArrayList();                
+        this.format = format;
     }
 
     @Override

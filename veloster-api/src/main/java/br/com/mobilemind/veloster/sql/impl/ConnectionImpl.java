@@ -27,6 +27,7 @@ import br.com.mobilemind.veloster.exceptions.VelosterException;
 import br.com.mobilemind.veloster.sql.Connection;
 import br.com.mobilemind.veloster.sql.Statement;
 import br.com.mobilemind.api.utils.log.MMLogger;
+import java.text.SimpleDateFormat;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ import java.util.logging.Level;
 public class ConnectionImpl implements Connection {
 
     private java.sql.Connection connection;
+    private SimpleDateFormat format;
     private String urlConnection;
     private List<String> pragmas;
     private boolean trans;
@@ -48,10 +50,15 @@ public class ConnectionImpl implements Connection {
     private String password;
 
     public ConnectionImpl(String urlConnection, String user, String password) {
+        this(urlConnection, user, password, null);
+    }
+
+    public ConnectionImpl(String urlConnection, String user, String password, SimpleDateFormat format) {
         this.urlConnection = urlConnection;
         this.pragmas = new ArrayList<String>();
         this.user = user;
         this.password = password;
+        this.format =format;
     }
 
     public java.sql.Connection getConnection() {
@@ -164,15 +171,25 @@ public class ConnectionImpl implements Connection {
         if (!isActive()) {
             throw new SQLException("transactions not's active");
         }
+
+        Statement stmt = null;
         if (isInsert) {
-            return new StatementImpl(this.connection.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS), query, true);
+            stmt = new StatementImpl(this.connection.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS), query, true);
         } else {
-            return new StatementImpl(this.connection.prepareStatement(query), query, false);
+            stmt = new StatementImpl(this.connection.prepareStatement(query), query, false);
         }
+
+        stmt.setDataFormat(this.format);
+
+        return stmt;
     }
 
     @Override
     public boolean isClosed() {
         return closed;
     }
+
+    public void setDataFormat(SimpleDateFormat format) {
+        this.format = format;
+    }    
 }

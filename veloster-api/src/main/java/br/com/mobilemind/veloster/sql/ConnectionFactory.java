@@ -1,5 +1,7 @@
 package br.com.mobilemind.veloster.sql;
 
+import java.text.SimpleDateFormat;
+
 /*
  * #%L
  * Mobile Mind - Veloster API
@@ -34,4 +36,6 @@ public interface ConnectionFactory {
     DataBase getDataBase();
     
     Connection getConnection();
+
+    void setDataFormat(SimpleDateFormat format);
 }

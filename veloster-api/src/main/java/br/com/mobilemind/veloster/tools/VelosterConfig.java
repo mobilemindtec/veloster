@@ -217,11 +217,6 @@ public class VelosterConfig {
             CONFIGURATION.driver.setPragmaExecute(true);
         }
 
-        if (CONFIGURATION.connectionFactory != null) {
-            DriverManager.setConnectionFactory(CONFIGURATION.connectionFactory);
-        } else {
-            DriverManager.setConnectionFactory(new ConnectionFactoryImpl());
-        }
 
         if (CONFIGURATION.dateFormat == null) {
             String formato = VelosterResource.getProperty("br.com.mobilemind.defaultDateFormat");
@@ -230,6 +225,13 @@ public class VelosterConfig {
                 formato = "yyyy-MM-dd hh:mm:ss";
             }
             CONFIGURATION.dateFormat = new SimpleDateFormat(formato);
+        }
+
+        if (CONFIGURATION.connectionFactory != null) {
+            CONFIGURATION.connectionFactory.setDataFormat(CONFIGURATION.dateFormat);
+            DriverManager.setConnectionFactory(CONFIGURATION.connectionFactory);
+        } else {
+            DriverManager.setConnectionFactory(new ConnectionFactoryImpl(CONFIGURATION.dateFormat));
         }
 
         if (CONFIGURATION.dialect == null) {

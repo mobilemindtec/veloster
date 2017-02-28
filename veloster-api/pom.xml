@@ -7,7 +7,7 @@
         <version>1.15</version>      
     </parent>
     <artifactId>veloster-api</artifactId>
-    <version>1.17</version>
+    <version>1.20</version>
     <packaging>jar</packaging>
 
     <url>http://www.mobilemind.com.br</url>

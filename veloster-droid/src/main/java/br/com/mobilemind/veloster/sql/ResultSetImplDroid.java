@@ -85,7 +85,13 @@ public class ResultSetImplDroid implements ResultSet {
     @Override
     public Date getDate(int i) throws SQLException {
         try {
-            return format.parse(this.cursor.getString(i - 1));
+            
+            String dateSrt = this.cursor.getString(i - 1);
+            
+            if(dateSrt == null || dateSrt.trim().length() == 0)
+                return null;
+
+            return format.parse(dateSrt);
         } catch (ParseException ex) {
             throw new SQLException("can't format date " + this.cursor.getString(i - 1));
         }

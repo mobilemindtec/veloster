@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -46,10 +47,16 @@ public class ConnectionImplDroid implements Connection {
     static long POOL_TIME = 0;
     static final Object SYNC = new Object();
     static Timer TIMER;
+    private SimpleDateFormat format;
 
     public ConnectionImplDroid(DataHelper helper) {
+        this(helper, null);
+    }
+
+    public ConnectionImplDroid(DataHelper helper, SimpleDateFormat format) {
         this.helper = helper;
         this.pragmas = new LinkedList<String>();
+        this.format = format;
     }
 
     private void timePool() {
@@ -197,6 +204,10 @@ public class ConnectionImplDroid implements Connection {
 
     @Override
     public Statement prepare(String string, boolean isInsert) throws SQLException {
-        return new StatementImplDroid(helper, string);
+        return new StatementImplDroid(helper, string, this.format);
     }
+
+    public void setDataFormat(SimpleDateFormat format) {
+        this.format = format;
+    }     
 }

@@ -28,6 +28,7 @@ import br.com.mobilemind.veloster.sql.impl.DataBaseImpl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -37,15 +38,21 @@ public class ConnectionFactoryImplDroid implements ConnectionFactory {
 
     private DataBase data;
     private static Map<DataBase, Connection> conections;
+    private SimpleDateFormat format;
 
     static {
         conections = new HashMap<DataBase, Connection>();
     }
     private Context context;
 
-    public ConnectionFactoryImplDroid(Context context) {
+    public ConnectionFactoryImplDroid(Context context, SimpleDateFormat format) {
         this.data = new DataBaseImpl();
         this.context = context;
+        this.format = format;
+    }
+
+    public ConnectionFactoryImplDroid(Context context) {
+        this(context, null);
     }
 
     @Override
@@ -63,8 +70,12 @@ public class ConnectionFactoryImplDroid implements ConnectionFactory {
             if (MMLogger.isLogable()) {
                 MMLogger.log(Level.INFO, this.getClass(), "create connection");
             }
-            conections.put(data, new ConnectionImplDroid(new DataHelper(context)));
+            conections.put(data, new ConnectionImplDroid(new DataHelper(context), this.format));
         }
         return conections.get(data);
     }
+
+    public void setDataFormat(SimpleDateFormat format) {
+        this.format = format;
+    }   
 }

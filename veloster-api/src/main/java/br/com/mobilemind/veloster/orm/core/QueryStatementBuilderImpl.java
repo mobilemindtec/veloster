@@ -368,7 +368,15 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
                         } else if (ClassUtil.isBoolean(fieldType)) {
                             field.set(data, rs.getBoolean(column));
                         } else if (ClassUtil.isDate(fieldType)) {
-                            field.set(data, rs.getDate(column));
+                            
+                            String str = rs.getString(column);
+                            
+                            if (str != null) {
+                                field.set(data, this.dataFormat.parse(str));
+                            }                            
+
+                            //field.set(data, rs.getDate(column));
+
                         } else if (ClassUtil.isDouble(fieldType)) {
                             field.set(data, rs.getDouble(column));
                         } else if (ClassUtil.isInteger(fieldType)) {

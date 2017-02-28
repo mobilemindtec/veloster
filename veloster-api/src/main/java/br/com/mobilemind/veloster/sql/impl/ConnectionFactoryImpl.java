@@ -32,6 +32,7 @@ import br.com.mobilemind.veloster.exceptions.VelosterException;
 import br.com.mobilemind.veloster.sql.Driver;
 import br.com.mobilemind.veloster.tools.VelosterConfig;
 import br.com.mobilemind.veloster.tools.VelosterResource;
+import java.text.SimpleDateFormat;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,7 @@ import java.util.logging.Level;
 public class ConnectionFactoryImpl implements ConnectionFactory {
 
     private static DataBase dataBase;
+    private SimpleDateFormat format;
     private static final String DRIVER = "br.com.mobilemind.db.driver";
     private static final String DB_NAME = "br.com.mobilemind.db.name";
     private static final String DB_TEST_NAME = "br.com.mobilemind.db.testName";
@@ -58,6 +60,14 @@ public class ConnectionFactoryImpl implements ConnectionFactory {
 
     static {
         ConnectionFactoryImpl.conections = new HashMap<DataBase, Connection>();
+    }
+
+    public ConnectionFactoryImpl (){
+
+    }
+
+    public ConnectionFactoryImpl (SimpleDateFormat format){
+        this.format = format;
     }
 
     @Override
@@ -78,9 +88,11 @@ public class ConnectionFactoryImpl implements ConnectionFactory {
             if (MMLogger.isLogable()) {
                 MMLogger.log(Level.INFO, this.getClass(), "create connection");
             }
-            ConnectionFactoryImpl.conections.put(ConnectionFactoryImpl.dataBase,
-                    new ConnectionImpl(getUrlConnection(), ConnectionFactoryImpl.dataBase.getUser(),
-                    ConnectionFactoryImpl.dataBase.getPassword()));
+            
+            ConnectionImpl conn = new ConnectionImpl(getUrlConnection(), ConnectionFactoryImpl.dataBase.getUser(),
+                    ConnectionFactoryImpl.dataBase.getPassword(), this.format);
+            
+            ConnectionFactoryImpl.conections.put(ConnectionFactoryImpl.dataBase, conn);
         }
         return ConnectionFactoryImpl.conections.get(ConnectionFactoryImpl.dataBase);
     }
@@ -194,4 +206,8 @@ public class ConnectionFactoryImpl implements ConnectionFactory {
             throw new VelosterException("error load data base driver [" + this.getDataBase().getDriver() + "]");
         }
     }
+
+    public void setDataFormat(SimpleDateFormat format) {
+        this.format = format;
+    }     
 }
