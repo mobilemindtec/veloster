@@ -82,6 +82,14 @@ public class DynamicFinderProcessorTestCase extends BaseTestCase {
 
         DynamicFinderEntity findByNameAndCampo1IsNull(String arg);
 
+        List<DynamicFinderEntity> findAllByTipoValor(String arg);
+
+        List<DynamicFinderEntity> findAllByTipo(String arg);
+
+        List<DynamicFinderEntity> findAllByTipoAndTipoValor(String arg, String arg2);
+
+        List<DynamicFinderEntity> findAllByTipoValorAndTipo(String arg, String arg2);
+
         List<DynamicFinderEntity> findAllByNameAndCampo1IsNull(String arg);
 
         int countByName(String arg);
@@ -91,7 +99,8 @@ public class DynamicFinderProcessorTestCase extends BaseTestCase {
 
     interface FinderModel extends RepositoryModel<DynamicFinderEntity> {
     }
-
+    
+    
     @Test
     public void testFinder() {
 
@@ -550,4 +559,107 @@ public class DynamicFinderProcessorTestCase extends BaseTestCase {
 
         Assert.assertTrue(finder.listByCriteria(criteria).isEmpty());
     }
+    
+    @Test
+    public void testFieldsTipoValue() {
+
+        FinderModel finderModel = VelosterRepository.getDynamicFinder(FinderModel.class, DynamicFinderEntity.class);
+        Finder finder = VelosterRepository.getDynamicFinder(Finder.class, DynamicFinderEntity.class);
+        DynamicFinderEntity p = new DynamicFinderEntity("ricardo");
+
+        p.setTipoValor("tvalue");
+
+
+        finderModel.persist(p);
+
+        Assert.assertEquals(1, finderModel.list().size());
+        Assert.assertNotNull(finderModel.load(p.getId()));
+        Assert.assertEquals(1, finderModel.count());
+
+        List<DynamicFinderEntity> results = finder.findAllByTipoValor("tvalue");
+        Assert.assertEquals(1, results.size());
+
+        Criteria criteria = finderModel.createCriteria();
+        finderModel.removeByCriteria(criteria);
+
+        Assert.assertTrue(finderModel.listByCriteria(criteria).isEmpty());
+    }
+
+    @Test
+    public void testFieldsTipo() {
+
+        FinderModel finderModel = VelosterRepository.getDynamicFinder(FinderModel.class, DynamicFinderEntity.class);
+        Finder finder = VelosterRepository.getDynamicFinder(Finder.class, DynamicFinderEntity.class);
+        DynamicFinderEntity p = new DynamicFinderEntity("ricardo");
+
+        p.setTipo("ttipo");
+
+
+        finderModel.persist(p);
+
+        Assert.assertEquals(1, finderModel.list().size());
+        Assert.assertNotNull(finderModel.load(p.getId()));
+        Assert.assertEquals(1, finderModel.count());
+
+        List<DynamicFinderEntity> results = finder.findAllByTipo("ttipo");
+        Assert.assertEquals(1, results.size());
+
+        Criteria criteria = finderModel.createCriteria();
+        finderModel.removeByCriteria(criteria);
+
+        Assert.assertTrue(finderModel.listByCriteria(criteria).isEmpty());
+    }  
+
+    @Test
+    public void testFieldsTipoAndTipoValor() {
+
+        FinderModel finderModel = VelosterRepository.getDynamicFinder(FinderModel.class, DynamicFinderEntity.class);
+        Finder finder = VelosterRepository.getDynamicFinder(Finder.class, DynamicFinderEntity.class);
+        DynamicFinderEntity p = new DynamicFinderEntity("ricardo");
+
+        p.setTipo("ttipo");
+        p.setTipoValor("ttipovalue");
+
+
+        finderModel.persist(p);
+
+        Assert.assertEquals(1, finderModel.list().size());
+        Assert.assertNotNull(finderModel.load(p.getId()));
+        Assert.assertEquals(1, finderModel.count());
+
+        List<DynamicFinderEntity> results = finder.findAllByTipoAndTipoValor("ttipo", "ttipovalue");
+        Assert.assertEquals(1, results.size());
+
+        Criteria criteria = finderModel.createCriteria();
+        finderModel.removeByCriteria(criteria);
+
+        Assert.assertTrue(finderModel.listByCriteria(criteria).isEmpty());
+    } 
+
+
+    @Test
+    public void testFieldsTipoValorAndTipo() {
+
+        FinderModel finderModel = VelosterRepository.getDynamicFinder(FinderModel.class, DynamicFinderEntity.class);
+        Finder finder = VelosterRepository.getDynamicFinder(Finder.class, DynamicFinderEntity.class);
+        DynamicFinderEntity p = new DynamicFinderEntity("ricardo");
+
+        p.setTipo("ttipo");
+        p.setTipoValor("ttipovalue");
+
+
+        finderModel.persist(p);
+
+        Assert.assertEquals(1, finderModel.list().size());
+        Assert.assertNotNull(finderModel.load(p.getId()));
+        Assert.assertEquals(1, finderModel.count());
+
+        List<DynamicFinderEntity> results = finder.findAllByTipoValorAndTipo("ttipovalue", "ttipo");
+        Assert.assertEquals(1, results.size());
+
+        Criteria criteria = finderModel.createCriteria();
+        finderModel.removeByCriteria(criteria);
+
+        Assert.assertTrue(finderModel.listByCriteria(criteria).isEmpty());
+    }            
 }

@@ -43,6 +43,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import br.com.mobilemind.api.utils.log.MMLogger;
+import java.util.logging.Level;
+
 
 /**
  *
@@ -104,10 +107,29 @@ public class DynamicFinderProcessor<T extends Entity> implements InvocationHandl
                 c = methodName.charAt(i);
             }
 
+
             if (!isReserved(key) || isNotIsNull(key, i, methodName)) {
                 key += c + "";
-                lastWord = "";
+                lastWord += c;
+                
+
+                Field f1 = ClassUtil.getField(clazz, lastWord + word);
+
+                if(f1 != null){
+
+                    if (f1.getAnnotation(Column.class) == null) {
+                        continue;
+                    }     
+
+                    finder = finders.get(finders.size()-1);
+                    finder.field = f1;
+                    finder.fieldName = lastWord + word;                        
+                    lastWord = lastWord + word;
+                    key = word = "";
+                }
+
             } else {
+                
 
                 if (isIgnoreCase(key)) {
                     if (finder == null) {
@@ -185,39 +207,22 @@ public class DynamicFinderProcessor<T extends Entity> implements InvocationHandl
                 // monta nome do atributo
                 word += c;                
 
-                if(lastWord != ""){
-                    Field f1 = ClassUtil.getField(clazz, lastWord + word);
+                Field f = ClassUtil.getField(clazz, word);
+                if (f != null) {
 
-                    if(f1 != null){
-                        if (f1.getAnnotation(Column.class) == null) {
-                            continue;
-                        }     
-
-                        finder = finders.get(finders.size()-1);
-                        finder.field = f1;
-                        finder.fieldName = lastWord + word;                        
-                        lastWord = lastWord + word;
-                        key = word = "";
+                    if (f.getAnnotation(Column.class) == null) {
+                        continue;
                     }
-                }else {
 
-                    Field f = ClassUtil.getField(clazz, word);
-                    if (f != null) {
-                        if (f.getAnnotation(Column.class) == null) {
-                            continue;
-                        }
-
-                        finder = new Finder();
-                        finder.field = f;
-                        finder.fieldName = word;
-                        finder.key = key;
-                        finders.add(finder);
-                        lastWord = word;
-                        key = word = "";
-                    }
+                    finder = new Finder();
+                    finder.field = f;
+                    finder.fieldName = word;
+                    finder.key = key;
+                    finders.add(finder);
+                    lastWord = word;
+                    key = word = "";
                 }
-
-
+                
             }
         }
 

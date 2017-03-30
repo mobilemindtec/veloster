@@ -28,13 +28,13 @@ import br.com.mobilemind.veloster.orm.annotations.Column;
 import br.com.mobilemind.veloster.orm.model.ColumnWrapper;
 import br.com.mobilemind.veloster.orm.model.TableImpl;
 import br.com.mobilemind.api.utils.ClassUtil;
-import br.com.mobilemind.api.utils.log.MMLogger;
 import br.com.mobilemind.veloster.exceptions.VelosterException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import br.com.mobilemind.api.utils.log.MMLogger;
 import java.util.logging.Level;
 
 /**

@@ -42,6 +42,11 @@ public class DynamicFinderEntity extends EntityImpl {
     @Column(length = 100, nullable = true)
     private String campo3;
 
+    @Column(length = 100, nullable = true)
+    private String tipo;
+    @Column(length = 100, nullable = true)
+    private String tipoValor;
+
     public DynamicFinderEntity() {
         this("Group One");
     }
@@ -81,6 +86,22 @@ public class DynamicFinderEntity extends EntityImpl {
     public void setCampo3(String campo3) {
         this.campo3 = campo3;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }    
+
+    public String getTipoValor() {
+        return tipoValor;
+    }
+
+    public void setTipoValor(String tipoValor) {
+        this.tipoValor = tipoValor;
+    }    
 
     @Override
     public String toString() {

@@ -4,11 +4,11 @@
     <parent>
         <groupId>br.com.mobilemind.api</groupId>
         <artifactId>veloster</artifactId>
-        <version>1.15</version>    
+        <version>1.21</version>    
     </parent>  
 
     <artifactId>veloster-droid</artifactId>
-    <version>1.20</version>
+    <version>1.21</version>
     <packaging>jar</packaging>
     <name>Mobile Mind - Veloster Droid</name>
 
@@ -43,17 +43,17 @@
 
     <distributionManagement>
         <repository>
-            <id>mobile-mind</id>
-            <name>vineetmanohar nexus</name>
-            <url>scpexe://nexus.mobilemind.com.br:/home/maven/mobile-mind</url>
+            <id>mobile-mind-droid-m2</id>
+            <name>Mobile Mind M2</name>
+            <url>dav:http://nexus.mobilemind.com.br/repository/mobile-mind-droid-m2</url>
         </repository>    
     </distributionManagement>
 
     <repositories>
         <repository>
-            <id>mobile-mind-droid-nexus</id>
-            <name>vineetmanohar</name>
-            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
+            <id>mobile-mind</id>
+            <name>Mobile Mind</name>
+            <url>http://nexus.mobilemind.com.br/repository/mobile-mind-m2</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -63,9 +63,9 @@
             </snapshots>
         </repository>
         <repository>
-            <id>mobile-mind-nexus</id>
-            <name>vineetmanohar</name>
-            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
+            <id>mobile-mind-droid</id>
+            <name>Mobile Mind Android</name>
+            <url>http://nexus.mobilemind.com.br/repository/mobile-mind-droid-m2</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -73,34 +73,10 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>        
+        </repository>
     </repositories>
 
-    <!-- download plugins from this repo -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>mobile-mind-droid-nexus</id>
-            <name>vineetmanohar</name>
-            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind-droid</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>mobile-mind-nexus</id>
-            <name>vineetmanohar</name>
-            <url>http://nexus.mobilemind.com.br/nexus/content/repositories/mobile-mind</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>    
+ 
         
     <build>      
         <plugins>
@@ -112,6 +88,17 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+              <artifactId>maven-site-plugin</artifactId>
+              <version>3.4</version>
+              <dependencies>
+                <dependency>
+                  <groupId>org.apache.maven.wagon</groupId>
+                  <artifactId>wagon-webdav-jackrabbit</artifactId>
+                  <version>2.8</version>
+                </dependency>
+              </dependencies>
+            </plugin>            
         </plugins>
     </build>
 </project>
