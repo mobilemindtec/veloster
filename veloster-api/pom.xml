@@ -4,10 +4,10 @@
     <parent>
         <groupId>br.com.mobilemind.api</groupId>
         <artifactId>veloster</artifactId>
-        <version>1.21</version>      
+        <version>1.22</version>      
     </parent>
     <artifactId>veloster-api</artifactId>
-    <version>1.21</version>
+    <version>1.22</version>
     <packaging>jar</packaging>
 
     <url>http://www.mobilemind.com.br</url>

@@ -4,11 +4,11 @@
     <parent>
         <groupId>br.com.mobilemind.api</groupId>
         <artifactId>veloster</artifactId>
-        <version>1.21</version>    
+        <version>1.22</version>    
     </parent>  
 
     <artifactId>veloster-droid</artifactId>
-    <version>1.21</version>
+    <version>1.22</version>
     <packaging>jar</packaging>
     <name>Mobile Mind - Veloster Droid</name>
 
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>br.com.mobilemind.api</groupId>
             <artifactId>veloster-api</artifactId>
-            <version>1.20</version>
+            <version>1.22</version>
         </dependency>
 
         <dependency>
