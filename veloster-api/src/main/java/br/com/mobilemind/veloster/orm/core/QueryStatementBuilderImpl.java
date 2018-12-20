@@ -127,18 +127,24 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
                     throw new VelosterException("field " + f.getName() + "to entity " + clazz.getSimpleName() + " can't have id 0");
                 }
             } else if (type.isEnum()) {
-                if (f.parseEnumInt()) {
-                    if (!f.isNullable() && value == null) {
-                        throw new VelosterException("value can't be null in enum " + type.getSimpleName() + " in entity " + f.getTable().getTableClass().getName());
+
+                ColumnWrapper wrapper = f;
+
+                if(f.isJoin())
+                    wrapper = f.getJoinField();
+
+                if (wrapper.parseEnumInt()) {
+                    if (!wrapper.isNullable() && value == null) {
+                        throw new VelosterException("value can't be null in enum " + type.getSimpleName() + " in entity " + wrapper.getTable().getTableClass().getName());
                     }
                     if (value != null) {
                         value = ((Enum) value).ordinal();
                     }
                     type = Integer.class;
                 } else {
-                    if (f.parseEnumString()) {
-                        if (!f.isNullable() && value == null) {
-                            throw new VelosterException("value can't be null in enum " + type.getSimpleName() + " in entity " + f.getTable().getTableClass().getName());
+                    if (wrapper.parseEnumString()) {
+                        if (!wrapper.isNullable() && value == null) {
+                            throw new VelosterException("value can't be null in enum " + type.getSimpleName() + " in entity " + wrapper.getTable().getTableClass().getName());
                         }
                         if (value != null) {
                             value = ((Enum) value).name();
@@ -349,6 +355,7 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
         Field field;
         Class fieldType;
         Map<String, Entity> cache = new HashMap<String, Entity>();
+        List<ColumnWrapper> fields = new AnnotationsManager(resultTransformer).getFields();
 
         try {
             while (rs.next()) {
@@ -384,36 +391,61 @@ public class QueryStatementBuilderImpl<T extends Entity> implements QueryStateme
                         } else if (ClassUtil.isLong(fieldType)) {
                             field.set(data, rs.getLong(column));
                         } else if (fieldType.isEnum()) {
-                            boolean found = false;
-                            try {
-                                int val = rs.getInteger(column);
+
+                            ColumnWrapper wrapper = null;
+                            Object value = null;
+
+                            for(ColumnWrapper f : fields){
+                                if(f.getName().equals(column)){
+                                    wrapper = f;
+                                    break;
+                                }
+                            }
+
+                            if(wrapper == null){
+                                throw new Exception("column wrapper not foind to column " + column + " type " + resultTransformer.getSimpleName());
+                            }
+
+
+                           if (wrapper.parseEnumInt()) {
+                                Integer val = rs.getInteger(wrapper.getName());
+                                if (val == null) {
+                                    val = 0;
+                                }
                                 for (Object p : fieldType.getEnumConstants()) {
-                                    if (((Enum) p).ordinal() == val) {
-                                        field.set(data, p);
-                                        found = true;
-                                        break;
+                                    if (val == ((Enum) p).ordinal()) {
+                                        value = p;
                                     }
                                 }
-                                if (found) {
-                                    continue;
+
+                                if (value == null && !wrapper.isNullable()) {
+                                    throw new Exception("enum type " + fieldType.getName() + " value " + val + " not found");
                                 }
-                            } catch (Exception e) {
-                                MMLogger.log(Level.INFO, getClass(), "velue to column [" + column + "] is enum, but not is a integer");
-                            }
 
-                            try {
-                                String value = rs.getString(column);
-                                Enum e = Enum.valueOf(fieldType, value);
-                                field.set(data, e);
-                                found = true;
-                            } catch (Exception e) {
-                                MMLogger.log(Level.INFO, getClass(), "velue to column [" + column + "] is enum, but not is a string");
-                            }
+                                if (value != null) {
+                                    field.set(data, value);
+                                }
 
-                            if (!found) {
-                                throw new VelosterException("not match value to enum column [" + column
-                                        + "]. expected enum constant or ordinal, but found [" + rs.getString(column) + "]");
+                            } else {
+                                String val = rs.getString(wrapper.getName());
+
+                                for (Object p : fieldType.getEnumConstants()) {
+                                    if (((Enum) p).name().equals(val)) {
+                                        value = p;
+                                    }
+                                }
+
+                                MMLogger.log(Level.INFO, this.getClass(), "field name=" + field.getName() + ", enum type=" + fieldType.getName() + ", enum value=" + val);
+
+                                if (value == null && !wrapper.isNullable()) {
+                                    throw new Exception("enum type " + fieldType.getName() + " name " + val + " not found");
+                                }
+
+                                if (value != null) {
+                                    field.set(data, value);
+                                }
                             }
+                            
                         } else if (ClassUtil.isAssignableFrom(fieldType, Entity.class)) {
                             Long id = rs.getLong(column);
 

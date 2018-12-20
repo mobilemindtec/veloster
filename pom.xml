@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.mobilemind.api</groupId>
     <artifactId>veloster</artifactId>
-    <version>1.22</version>
+    <version>1.23</version>
     <packaging>pom</packaging>
     
     <name>Mobile Mind - Veloster</name>
@@ -13,7 +13,7 @@
         <repository>
             <id>mobile-mind-m2</id>
             <name>Mobile Mind M2</name>
-            <url>dav:http://nexus.mobilemind.com.br/repository/mobile-mind-m2</url>
+            <url>http://nexus.mobilemind.com.br/repository/mobile-mind-m2</url>
         </repository>  
     </distributionManagement>
 
@@ -85,17 +85,23 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <plugin>
-              <artifactId>maven-site-plugin</artifactId>
-              <version>3.4</version>
-              <dependencies>
-                <dependency>
-                  <groupId>org.apache.maven.wagon</groupId>
-                  <artifactId>wagon-webdav-jackrabbit</artifactId>
-                  <version>2.8</version>
-                </dependency>
-              </dependencies>
-            </plugin>            
+
+              <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                    <executions>
+                        <execution>
+                            <id>exec-one</id>
+                            <phase>install</phase>
+                            <goals>
+                                
+                                <goal>deploy</goal>
+                                
+                            </goals>                        
+                        </execution>                    
+                    </executions>
+                </plugin>         
         </plugins>
 
            

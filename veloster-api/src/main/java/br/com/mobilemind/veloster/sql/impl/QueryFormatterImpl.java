@@ -185,14 +185,17 @@ public class QueryFormatterImpl implements QueryFormatter {
             List<String> tables = new LinkedList<String>();
             for (Expression e : where) {
                 if (e.getField().isJoin()) {
-                    if (tables.contains(table)) {
-                        continue;
-                    }
+
                     String tbName = new TableImpl(e.getField().getType()).name();
+                    
+                    if (tables.contains(tbName)) {
+                        continue;
+                    }                    
+                    
                     query.append(" join ").append(tbName);
                     query.append(" on ").append(prefix).append(e.getField().getName());
                     query.append(" = ").append(tbName).append(".id");
-                    tables.add(table);
+                    tables.add(tbName);
                 }
             }
         }
