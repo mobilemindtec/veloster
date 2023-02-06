@@ -25,12 +25,12 @@
         <dependency>
             <groupId>br.com.mobilemind.api</groupId>
             <artifactId>veloster-droid</artifactId>
-            <version>1.0</version>
+            <version>1.6</version>
         </dependency>
         <dependency>
             <groupId>br.com.mobilemind.api</groupId>
             <artifactId>veloster-api</artifactId>
-            <version>1.0</version>
+            <version>1.24</version>
         </dependency>    
     </dependencies>
   
@@ -76,8 +76,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>        
