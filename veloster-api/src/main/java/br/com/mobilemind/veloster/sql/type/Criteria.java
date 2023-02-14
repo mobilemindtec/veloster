@@ -49,6 +49,7 @@ public class Criteria<T extends Entity> {
     private boolean autoIncrementOffset;
     private QueryExecutor<T> executor;
     private int keyHashCode;
+    private String alias;
 
     /**
      * Construtor
@@ -75,19 +76,35 @@ public class Criteria<T extends Entity> {
         return this;
     }
 
+    public Criteria add(Expression expression) {
+        if (expression == null) {
+            throw new InvalidParameterException("expresson can't be null");
+        }
+        checkField(null, expression);
+        return this;
+    }
+
+
+    public Criteria<T> setAlias(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
     private void checkField(String field, Expression expression) {
         try {
 
-            int idx = field.indexOf(".");
-            if (idx > -1) {
-                this.joinExpression(field, expression);
-            } else {
-                java.lang.reflect.Field f = ClassUtil.getAnnotatedField(this.clazz, Column.class, field);
-                if (f == null) {
-                    throw new InvalidParameterException();
+            if(field != null) {
+                int idx = field.indexOf(".");
+                if (idx > -1) {
+                    this.joinExpression(field, expression);
+                } else {
+                    java.lang.reflect.Field f = ClassUtil.getAnnotatedField(this.clazz, Column.class, field);
+                    if (f==null) {
+                        throw new InvalidParameterException();
+                    }
+                    boolean b = expression instanceof IsNull || expression instanceof NotIsNull;
+                    expression.setField(new ColumnWrapper(f, null, b));
                 }
-                boolean b = expression instanceof IsNull || expression instanceof NotIsNull;
-                expression.setField(new ColumnWrapper(f, null, b));
             }
 
             this.expressions.add(expression);
@@ -159,6 +176,8 @@ public class Criteria<T extends Entity> {
         }
         return this;
     }
+
+
 
     public Criteria<T> orderByDesc(String... fields) {
         for (String field : fields) {

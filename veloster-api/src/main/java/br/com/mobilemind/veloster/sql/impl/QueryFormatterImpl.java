@@ -24,13 +24,8 @@ package br.com.mobilemind.veloster.sql.impl;
 
 import br.com.mobilemind.veloster.orm.QueryFormatter;
 import br.com.mobilemind.veloster.orm.model.TableImpl;
-import br.com.mobilemind.veloster.sql.type.Between;
-import br.com.mobilemind.veloster.sql.type.Expression;
-import br.com.mobilemind.veloster.sql.type.IsNull;
-import br.com.mobilemind.veloster.sql.type.Like;
-import br.com.mobilemind.veloster.sql.type.Match;
-import br.com.mobilemind.veloster.sql.type.NotIsNull;
-import br.com.mobilemind.veloster.sql.type.OrderBy;
+import br.com.mobilemind.veloster.sql.type.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -156,7 +151,7 @@ public class QueryFormatterImpl implements QueryFormatter {
     private String getSelect() {
         boolean joineable = false;
         for (Expression e : where) {
-            if (e.getField().isJoin()) {
+            if (e.getField() != null && e.getField().isJoin()) {
                 joineable = true;
             }
 
@@ -184,7 +179,7 @@ public class QueryFormatterImpl implements QueryFormatter {
         if (joineable) {
             List<String> tables = new LinkedList<String>();
             for (Expression e : where) {
-                if (e.getField().isJoin()) {
+                if (e.getField() != null && e.getField().isJoin()) {
 
                     String tbName = new TableImpl(e.getField().getType()).name();
                     
@@ -369,9 +364,9 @@ public class QueryFormatterImpl implements QueryFormatter {
         Object key = null;
         Iterator it;
         String word = whereExistes ? and : where;
-        boolean joineable = e.getField().isJoin();
+        boolean joineable = e.getField() != null && e.getField().isJoin();
         String joinTable = "";
-        String fieldName;
+        String fieldName = "";
 
         if (joineable) {
             joinTable = new TableImpl(e.getField().getType()).name() + ".";
@@ -380,7 +375,8 @@ public class QueryFormatterImpl implements QueryFormatter {
             if (joinExists) {
                 joinTable = this.table + ".";
             }
-            fieldName = e.getField().getName();
+            if(e.getField() != null)
+                fieldName = e.getField().getName();
         }
 
         if (e instanceof Like) {
@@ -418,7 +414,14 @@ public class QueryFormatterImpl implements QueryFormatter {
             }
             andAndWhereUsed = true;
             query.append(word).append(joinTable).append(fieldName).append(" ").append(e.getKeyWork());
-        } else {
+        }  else if (e instanceof Exists || e instanceof NotExists) {
+            if (andAndWhereUsed) {
+                word = or;
+            }
+            andAndWhereUsed = true;
+            String subquery = e.getValues().iterator().next().toString();
+            query.append(word).append(e.getKeyWork()).append("( ").append(subquery).append(") ");
+        }else {
             int len = e.getValues().size();
             for (int i = 0; i < len; i++) {
                 if (andAndWhereUsed) {

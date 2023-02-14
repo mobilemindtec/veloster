@@ -26,12 +26,7 @@ import br.com.mobilemind.veloster.exceptions.EntityValidatorException;
 import br.com.mobilemind.veloster.exceptions.FailProcessExcetion;
 import br.com.mobilemind.veloster.exceptions.VelosterException;
 import br.com.mobilemind.veloster.orm.Veloster;
-import br.com.mobilemind.veloster.sql.type.Criteria;
-import br.com.mobilemind.veloster.sql.type.Eq;
-import br.com.mobilemind.veloster.sql.type.IsNull;
-import br.com.mobilemind.veloster.sql.type.Like;
-import br.com.mobilemind.veloster.sql.type.Match;
-import br.com.mobilemind.veloster.sql.type.NotIsNull;
+import br.com.mobilemind.veloster.sql.type.*;
 import br.com.mobilemind.veloster.tools.VelosterRepository;
 import br.com.mobilemind.veloster.teste.pack.NullebleEntity;
 import br.com.mobilemind.veloster.teste.pack.Person;
@@ -462,5 +457,49 @@ public class StatementPersonGroupTestCase extends BaseTestCase {
         }
 
         Assert.assertEquals(50, assertCount);
+    }
+
+    @Test
+    public void testExists() {
+        Veloster<PersonGroup> managerpg = VelosterRepository.getVeloster(PersonGroup.class);
+        Veloster<Person> managerp = VelosterRepository.getVeloster(Person.class);
+
+        PersonGroup pg1 = new PersonGroup();
+        pg1.setName("joselito");
+        managerpg.save(pg1);
+
+        Person p1 = new Person();
+        p1.setAge(34);
+        p1.setGroup(pg1);
+        p1.setName("claudio");
+        p1.setBirthDay(new Date());
+        p1.setPersonType(PersonType.PERSON_1);
+        p1.setDoubleValue(1);
+        p1.setLongValue(1);
+        managerp.save(p1);
+
+        Criteria<PersonGroup> criteriapg = managerpg.createCriteria();
+        Criteria<Person> criteriap = managerp.createCriteria();
+
+        List<PersonGroup> itemspg = criteriapg.orderBy("name").list();
+        Assert.assertTrue(itemspg.size()==1);
+
+        List<Person> itemsp = criteriap.orderBy("name").list();
+        Assert.assertTrue(itemsp.size()==1);
+
+        criteriap = managerp.createCriteria();
+        criteriap.add(new Exists("select id from PersonsGroups where id = Person.id"));
+
+        itemsp = criteriap.orderBy("name").list();
+        Assert.assertTrue(itemsp.size()==1);
+        Assert.assertTrue(criteriap.count()==1);
+
+        criteriap = managerp.createCriteria();
+        criteriap.add(new Exists("select id from PersonsGroups where id = 10"));
+
+        itemsp = criteriap.orderBy("name").list();
+        Assert.assertTrue(itemsp.size()==0);
+
+        Assert.assertTrue(criteriap.count()==0);
     }
 }

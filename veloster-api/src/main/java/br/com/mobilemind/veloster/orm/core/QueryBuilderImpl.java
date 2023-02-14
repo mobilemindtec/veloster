@@ -22,14 +22,11 @@ package br.com.mobilemind.veloster.orm.core;
  * #L%
  */
 import br.com.mobilemind.veloster.orm.DDLDialect;
-import br.com.mobilemind.veloster.sql.type.Criteria;
+import br.com.mobilemind.veloster.sql.type.*;
 import br.com.mobilemind.veloster.orm.model.Entity;
 import br.com.mobilemind.veloster.orm.model.ColumnWrapper;
 import br.com.mobilemind.veloster.orm.QueryBuilder;
 import br.com.mobilemind.veloster.orm.QueryFormatter;
-import br.com.mobilemind.veloster.sql.type.Between;
-import br.com.mobilemind.veloster.sql.type.Expression;
-import br.com.mobilemind.veloster.sql.type.OrderBy;
 import br.com.mobilemind.api.utils.log.MMLogger;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -268,7 +265,7 @@ public class QueryBuilderImpl<T extends Entity> implements QueryBuilder<T> {
                 ColumnWrapper f = null;
                 for (Expression e : expressions) {
 
-                    if (e instanceof OrderBy) {
+                    if (e instanceof OrderBy || e instanceof Exists || e instanceof NotExists) {
                         continue;
                     }
 

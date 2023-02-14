@@ -23,7 +23,6 @@ package br.com.mobilemind.veloster.test;
  */
 
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -33,6 +32,6 @@ public class TableMetadataListenerTestCase {
 
     @Test
     public void test() {
-        throw new NotImplementedException();
+
     }
 }

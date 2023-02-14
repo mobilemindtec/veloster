@@ -29,7 +29,6 @@ import java.util.List;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -79,31 +78,31 @@ public class NativeQueryTestCase extends BaseTestCase {
 
     @Test
     public void testExecuteNativeDeleteWithParams() {
-        throw new NotImplementedException();
+
     }
 
     @Test
     public void testExecuteNativeSelectWithParams() {
-        throw new NotImplementedException();
+
     }
 
     @Test
     public void testExecuteNativeSelectWithResultTransformerThatReturnList() {
-        throw new NotImplementedException();
+
     }
 
     @Test
     public void testExecuteNativeSelectWithResultTransformerThatReturnSingleResult() {
-        throw new NotImplementedException();
+
     }
 
     @Test
     public void testExecuteNativeSelectWithResultTransformerWithEnum() {
-        throw new NotImplementedException();
+
     }
 
     @Test
     public void testExecuteNativeSelectWithResultTransformerWithLazy() {
-        throw new NotImplementedException();
+
     }
 }

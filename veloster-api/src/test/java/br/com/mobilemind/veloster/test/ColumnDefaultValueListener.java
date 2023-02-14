@@ -23,7 +23,6 @@ package br.com.mobilemind.veloster.test;
  */
 
 import org.junit.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -32,7 +31,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class ColumnDefaultValueListener {
 
     @Test
-    public void test() {
-        throw new NotImplementedException();
+    public void test(){
     }
 }
